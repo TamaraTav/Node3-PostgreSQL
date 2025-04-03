@@ -1,12 +1,15 @@
 import pool from "../config/db.config.js";
+import {PrismaClient} from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 
 //Get all Products
 async function getProducts(req, res) {
 
     try {
-        const result = await pool.query('SELECT * FROM products');
-        res.json(result.rows);
+       const products = await prisma.products.findMany();
+       res.json(products);
     } catch (err) {
         console.log('Error executing query', err.stack);
         res.status(500).json({error: 'Internal server error'});

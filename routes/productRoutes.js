@@ -1,7 +1,12 @@
-// import express from 'express';
+import express from 'express';
 const router = express.Router();
-import {getProducts, getOneProduct, createProduct, updateProduct, deleteProduct, getCategoryStats} from "../controllers/productController.js";
-import express from "express";
+import {
+    getProducts,
+    getOneProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getCategoryStats} from "../controllers/productController.js";
 
 //User routes
 router.get('/', getProducts);
