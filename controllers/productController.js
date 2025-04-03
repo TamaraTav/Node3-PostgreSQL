@@ -85,8 +85,14 @@ async function  deleteProduct(req, res) {
 
 async function  getCategoryStats(req, res) {
     try {
-        const result = await pool.query('SELECT category, COUNT(*), AVG(price) as avarage, MIN(price), MAX(price) FROM products GROUP BY category');
-        res.json(result.rows);
+        const result = await prisma.products.groupBy({
+            by: ['category'],
+            _count: true,
+            _avg: { price: true},
+            _min: { price: true},
+            _max: { price: true},
+        });
+        res.json(result);
     } catch (err) {
         console.log('Error executing query', err.stack);
         res.status(500).json({error: 'Internal server error'});
