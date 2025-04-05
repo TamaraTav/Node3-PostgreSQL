@@ -1,4 +1,4 @@
-import pool from "../config/db.config.js";
+
 import {PrismaClient} from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -8,7 +8,15 @@ const prisma = new PrismaClient();
 async function getProducts(req, res) {
 
     try {
-       const products = await prisma.products.findMany();
+       const products = await prisma.products.findMany({
+           include: {
+               category: {
+                   select: {
+                       name: true,
+                   },
+               },
+           },
+       });
        res.json(products);
     } catch (err) {
         console.log('Error executing query', err.stack);
