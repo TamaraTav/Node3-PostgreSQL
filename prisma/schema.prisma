@@ -26,3 +26,4 @@ model products {
   description String?   @db.VarChar(255)
   slug        String?   @db.VarChar(255)
 }
+
