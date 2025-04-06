@@ -8,7 +8,7 @@ import {
     deleteProduct,
     getCategoryStats} from "../controllers/productController.js";
 
-//User routes
+//Product routes
 router.get('/', getProducts);
 router.get('/category-stats', getCategoryStats);
 router.get('/:id', getOneProduct);

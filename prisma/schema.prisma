@@ -25,6 +25,8 @@ model products {
   stock       Int?      @default(0)
   description String?   @db.VarChar(255)
   slug        String?   @db.VarChar(255)
+
+  usersProducts usersProducts[]
 }
 
 model user {
@@ -33,4 +35,14 @@ model user {
   firstName  String   @db.VarChar(255)
   lastName   String   @db.VarChar(255)
   email      String   @db.VarChar(255)
+
+  usersProducts usersProducts[]
+}
+
+model usersProducts {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  user      user     @relation(fields: [userId], references: [id])
+  product   products @relation(fields: [productId], references: [id])
 }
