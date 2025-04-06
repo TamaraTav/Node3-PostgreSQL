@@ -6,7 +6,8 @@ import {
     createProduct,
     updateProduct,
     deleteProduct,
-    getCategoryStats} from "../controllers/productController.js";
+    getCategoryStats,
+    buyProduct} from "../controllers/productController.js";
 
 //Product routes
 router.get('/', getProducts);
@@ -15,6 +16,7 @@ router.get('/:id', getOneProduct);
 router.post('/', createProduct);
 router.put('/:id', updateProduct);
 router.delete('/:id', deleteProduct);
+router.post('/buyProduct/:id', buyProduct);
 
 
 export default router;

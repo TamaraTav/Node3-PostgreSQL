@@ -108,5 +108,57 @@ async function  getCategoryStats(req, res) {
 }
 
 
+//პროდუქტის ყიდვა იუზერის მიერ
+async function  buyProduct(req, res) {
+    try {
+        const { id } = req.params;
+        const { userId } = req.body;
 
-export {getProducts, getOneProduct, createProduct, updateProduct, deleteProduct, getCategoryStats};
+        //check user
+        const user = await prisma.user.findUnique({
+            where: {id: parseInt(userId)},
+        });
+        if (!user) {
+            return res.status(404).json({error: 'Product not found'});
+        }
+
+        //check product
+        const product = await prisma.products.findUnique({
+            where: {id: parseInt(id)},
+        });
+        if (!product) {
+            return res.status(404).json({error: 'Product not found'});
+        }
+
+        //check stock
+        if (product.stock <= 0) {
+            return res.status(404).json({error: 'Product is out of stock'});
+        }
+
+        //update stock
+        await prisma.products.update({
+            where: {id: parseInt(id)},
+            data: {stock: product.stock - 1 },
+        });
+
+
+        const userProduct = await prisma.usersProducts.create({
+            data: {userId, productId: parseInt(id)},
+        });
+        res.status(201).json({message: 'Product bought successfully ! '});
+    } catch (err) {
+        console.log('Error executing query', err.stack);
+        res.status(500).json({error: 'Internal server error'});
+    }
+}
+
+
+
+export {
+    getProducts,
+    getOneProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getCategoryStats,
+    buyProduct};

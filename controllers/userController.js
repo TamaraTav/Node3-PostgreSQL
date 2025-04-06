@@ -45,7 +45,7 @@ export const deleteUser = async (req, res) => {
 
 export const signup = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);    //პაროლის ჰეშირება
     const user = await prisma.user.create({
         data: { firstName, lastName, email, password: hashedPassword },
     });
