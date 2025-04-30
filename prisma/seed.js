@@ -17,6 +17,15 @@ async function main() {
         },
     });
 
+    //create user
+    // const user = await prisma.user.create({
+    //     data: {
+    //         name: 'John Doe',
+    //         email: 'johndoe@gmail.com',
+    //         password: 'password',
+    //     }
+    // })
+
     // Create products and connect to categories
     await prisma.products.createMany({
         data: [

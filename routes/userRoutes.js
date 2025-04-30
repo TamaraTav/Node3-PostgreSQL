@@ -7,13 +7,13 @@ import {
     updateUser,
     deleteUser,
     signup,
-    signin
+    login
 } from '../controllers/userController.js';
 
 router.post('/', createUser);
 router.get('/', getUsers);
 router.post('/signup', signup);
-router.get('/signin', signin);
+router.get('/login', login);
 router.get('/:id', getUserById);
 router.put('/:id', updateUser);
 router.delete('/:id', deleteUser);
