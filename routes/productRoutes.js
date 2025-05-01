@@ -18,7 +18,7 @@ router.get('/:id', getOneProduct);
 router.post('/', createProduct);
 router.put('/:id', updateProduct);
 router.delete('/:id', deleteProduct);
-router.post('/buyProduct/:id', auth, buyProduct); //ჯერ auth და მერე buy
+router.post('/buyProduct/:id', auth, buyProduct); //ჯერ auth და მერე buy, დაცული როუტი
 
 
 export default router;

@@ -67,9 +67,8 @@ export const login = async (req, res) => {
 
 
     //ტოკენის შექმნის ლოგიკა
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-    });
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {expiresIn: '1h'});
+
     delete user.password;
 
 
