@@ -12,8 +12,10 @@ import {
 
 router.post('/', createUser);
 router.get('/', getUsers);
+
 router.post('/signup', signup);
-router.get('/login', login);
+router.post('/login', login);
+
 router.get('/:id', getUserById);
 router.put('/:id', updateUser);
 router.delete('/:id', deleteUser);

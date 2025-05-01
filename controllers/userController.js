@@ -45,7 +45,7 @@ export const deleteUser = async (req, res) => {
 };
 
 
-//პრობლემაა ჰეშირებისას სალტ არ მოსწონს
+//პრობლემაა ჰეშირებისას სალტ არ მოსწონს!!!!!!!!!!!!!!!!
 export const signup = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
     //პაროლის ჰეშირება
@@ -57,21 +57,21 @@ export const signup = async (req, res) => {
 };
 
 
+
+//იუზერის შესვლა სისტემაში Sign in
 export const login = async (req, res) => {
     const { email, password } = req.body;
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email: email } });
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
         return res.status(401).json({ message: 'Invalid credentials' });
     }
-
 
     //ტოკენის შექმნის ლოგიკა
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {expiresIn: '1h'});
 
     delete user.password;
 
-
-    res.json({ message: 'Login successfully', token, user });
+    res.json({ message: 'User signed in successfully', token, user });
 };
 
