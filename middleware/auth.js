@@ -16,7 +16,7 @@ export const auth = (req, res, next) => {
 
 export const isAdmin = (req, res, next) => {
     if (req.user.role !== 'admin') {
-        return res.status(401).json({ error: 'Unauthorized' });
+        return res.status(401).json({ error: 'Only Admins can access this action' });
     }
 
     next();

@@ -5,9 +5,9 @@ import jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 
 export const createUser = async (req, res) => {
-    const { firstName, lastName, email } = req.body;
+    const { firstName, lastName, email, roleId } = req.body;
     const user = await prisma.user.create({
-        data: { firstName, lastName, email },
+        data: { firstName, lastName, email, roleId },
     });
     res.json(user);
 };
