@@ -61,14 +61,15 @@ export const signup = async (req, res) => {
 //იუზერის შესვლა სისტემაში Sign in
 export const login = async (req, res) => {
     const { email, password } = req.body;
-    const user = await prisma.user.findUnique({ where: { email: email } });
+    const user = await prisma.user.findUnique({ where: { email: email }, include: {roles: true } });
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
         return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     //ტოკენის შექმნის ლოგიკა
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {expiresIn: '1h'});
+    const token = jwt.sign({ id: user.id, role: user.roles.name }, process.env.JWT_SECRET,
+        {expiresIn: '1h'});
 
     delete user.password;
 
