@@ -131,3 +131,23 @@ export const forgotPassword = async (req, res) => {
 
 }
 
+
+//როცა შეიყვანს სწორ OTP კოდს, მერე პაროლის გამახლებას ვუკეთებთ
+export const resetPassword = async (req, res) => {
+    const { email, otpCode, newPassword } = req.body;
+    const user = await prisma.user.findUnique({ where: { email: email } });
+    if (!user) {
+        return res.status(401).json({ message: 'User not found !' });
+    }
+    if (user.otpCode !== otpCode || user.otpExpiry < new Date() ) {
+        return res.status(401).json({ message: 'Invalid OTP Code or Time has passed !' });
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+        where: {id: user.id},
+        data: { password: hashedPassword, otpCode: null, otpExpiry : null},
+        //პაროლის განახლების მერე კოდიც და ვადაც გავანულე ბაზაში
+    });
+    res.json({message: 'Password reset successfully' });
+}
+
