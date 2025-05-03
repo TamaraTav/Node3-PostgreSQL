@@ -108,8 +108,15 @@ export const forgotPassword = async (req, res) => {
         from: process.env.EMAIL_USER,
         to: email,
         subject: 'OTP CODE for password reset',
-        text: `Your OTP for password reset is ${otpCode}`,
+        html: `
+        <h1>Password Reset OTP Code</h1>
+        <p>You requested a password reset. Use the following OTP code to reset your password:</p>
+        <h2 style="color: #4CAF50; font-size: 32px; letter-spacing: 5px; text-align: center;">${otpCode}</h2>
+        <p>This code will expire in 5 minutes.</p>
+        <p>If you didn't request this, please ignore this email.</p>
+        `,
     };
+
     try {
         await transporter.sendMail(mailOptions);
         res.json({ message: 'OTP sending to email', otpCode });
