@@ -1,7 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
+import  sendEmail  from '../utils/emailService.js'
+
 
 const prisma = new PrismaClient();
 
@@ -45,7 +46,7 @@ export const deleteUser = async (req, res) => {
     });
 };
 
-//პრობლემაა ჰეშირებისას სალტ არ მოსწონს!!!!!!!!!!!!!!!!
+//sugn up
 export const signup = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
     //პაროლის ჰეშირება
@@ -78,10 +79,6 @@ export const login = async (req, res) => {
 };
 
 
-
-
-
-
 //როცა მომხმარებელი მოითხოვს პაროლის აღდგენას, ვუგენერირებთ otpCode-ს
 export const forgotPassword = async (req, res) => {
     const { email } = req.body;
@@ -96,39 +93,27 @@ export const forgotPassword = async (req, res) => {
         data: { otpCode, otpExpiry },
     });
 
-    //მეილის გაგზავნა
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'OTP CODE for password reset',
-        html: `
-        <h1>Password Reset OTP Code</h1>
+    /////ემეილის გაგზავნა მოგვაქვს util-იდან ა ვუცვლით email-ს, subject-s da html-s, რომ დინამიური იყოს
+    try {
+        const isEmailSent = await  sendEmail(
+            email,
+            'OTP CODE for password reset',
+            `<h1>Password Reset OTP Code</h1>
         <p>You requested a password reset. Use the following OTP code to reset your password:</p>
         <h2 style="color: #4CAF50; font-size: 32px; letter-spacing: 5px; text-align: center;">${otpCode}</h2>
         <p>This code will expire in 5 minutes.</p>
         <p>If you didn't request this, please ignore this email.</p>
-        `,
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-        res.json({ message: 'OTP sending to email', otpCode });
+            `,
+        );
+        if (isEmailSent) {
+            res.json({message: 'OTP sent to email Successfully', otpCode});
+        } else {
+            res.status(500).json({ message: 'Faild to send email' });
+        }
     } catch (error) {
-        console.error('Error sending to email', error);
+        console.error('Error sending email:', error);
         res.status(500).json({ message: 'Faild to send email' });
     }
-
-    res.json({message: 'OTP sent to email Successfully', });
-
-
-
 }
 
 
