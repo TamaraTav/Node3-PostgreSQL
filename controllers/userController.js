@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import  sendEmail  from '../utils/emailService.js'
 
 
+
 const prisma = new PrismaClient();
 
 export const createUser = async (req, res) => {
@@ -38,6 +39,18 @@ export const updateUser = async (req, res) => {
     });
     res.json(user);
 };
+
+//პროფილის სურათის ატვირთვა
+export const uploadProfilePicture = async (req, res) => {
+    // const { id } = req.params;
+    // const { profilePicture } = req.body;
+    // const user = await prisma.user.update({
+    //     where: { id: parseInt(id) },
+    //     data: { profilePicture: profilePicture },
+    // });
+    res.json({message: 'Profile picture uploaded'});
+}
+
 
 export const deleteUser = async (req, res) => {
     const { id } = req.params;
@@ -135,4 +148,7 @@ export const resetPassword = async (req, res) => {
     });
     res.json({message: 'Password reset successfully' });
 }
+
+
+
 
