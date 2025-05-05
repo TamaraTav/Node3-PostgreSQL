@@ -4,12 +4,15 @@ import express from 'express';
 import productRoutes from './routes/productRoutes.js';
 import pool from "./config/db.config.js";
 import userRoutes from "./routes/userRoutes.js";
+import path from "path";
 
 const app = express();
 const port = process.env.PORT || 4000;
 
 //Middleware
 app.use(express.json());
+app.use('/uploads', express.static("./uploads"));  // კლიენტმა რომ შეძლოს მისწვდეს ფოტოს
+                                     //http://localhost:4000/uploads/1746324312431-182757769.jpg
 
 //Routes
 app.get('/', (req, res) => {

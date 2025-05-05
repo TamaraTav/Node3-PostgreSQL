@@ -42,13 +42,15 @@ export const updateUser = async (req, res) => {
 
 //პროფილის სურათის ატვირთვა
 export const uploadProfilePicture = async (req, res) => {
-    // const { id } = req.params;
-    // const { profilePicture } = req.body;
-    // const user = await prisma.user.update({
-    //     where: { id: parseInt(id) },
-    //     data: { profilePicture: profilePicture },
-    // });
-    res.json({message: 'Profile picture uploaded'});
+     const { id } = req.params;
+     if(!req.file) {
+         return res.status(400).json({message:'No file uploaded'});
+     }
+    const user = await prisma.user.update({
+        where: { id: parseInt(id) },
+        data: { profilePicture: req.file.path },
+    });
+    res.json(user);
 }
 
 
@@ -59,7 +61,7 @@ export const deleteUser = async (req, res) => {
     });
 };
 
-//sugn up
+//sign up
 export const signup = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
     //პაროლის ჰეშირება
