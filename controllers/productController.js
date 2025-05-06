@@ -1,5 +1,7 @@
 
 import {PrismaClient} from '@prisma/client';
+import xlsx from 'xlsx';
+import fs from 'fs';
 
 const prisma = new PrismaClient();
 
@@ -59,9 +61,29 @@ async  function createProduct(req, res) {
 
 //პროდუქტზე ექსელის ფაილის ატვირთვა
 async function uploadProductsExcel(req, res) {
-    res.json({message: 'Excel file uploaded'});
+    if(!req.file) {
+        return res.status(400).json({error: 'No file uploaded'});
+    }
+    const workbook = xlsx.readFile(req.file.path);
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const sheet = xlsx.utils.sheet_to_json(worksheet);
+                  //ვიღებ ექსელის ვორკ-შიტიდან ინფორმაციას და გარდავქმნი ჯეისონად
+   await prisma.products.createMany({
+       data: sheet.map((row) => ({
+           name: row.name,
+           price: row.price,
+           stock: row.stock,
+           description: row.description,
+           slug: row.slug,
+           category: row.category,
+       })),
+   });
+   fs.unlinkSync(req.file.path); //როცა წაიკითხავს მაგის მერე ვშლი, რომ სერვერი არ გადაივსოს
 
+   res.json({ message: 'Successfully uploaded Products from  Excel' });
 }
+
 
 
 // დაედიტება
