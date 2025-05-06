@@ -1,4 +1,6 @@
 import express from 'express';
+import {uploadExcel} from "../middleware/uploadFile.js";
+
 const router = express.Router();
 import {
     getProducts,
@@ -23,7 +25,7 @@ router.post('/', createProduct);
 router.put('/:id', updateProduct);
 router.delete('/:id', auth, isAdmin, deleteProduct);
 router.post('/buyProduct/:id', auth, buyProduct); //ჯერ auth და მერე buy, დაცული როუტი
-router.post('/upload-product-excel', upload.single('products'), uploadProductsExcel);
+router.post('/upload-product-excel', uploadExcel.single('products'), uploadProductsExcel);
 export default router;
 
 

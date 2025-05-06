@@ -15,11 +15,31 @@ const storage = multer.diskStorage({
     },
 });
 
-const filterFiles = (req, files, cb) => {
+//სურათის აფლოადისთვის
+const filterProfilePicture = (req, files, cb) => {
     const allowedFileTypes = [
         'image/png',
         'image/jpeg',
-        'image/jpg',
+        'image/jpg'];
+    if (allowedFileTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Only image types allowed !!!'));
+    }
+};
+
+const uploadProfilePicture = multer({
+    storage: storage,
+    filterFiles: filterProfilePicture,
+    limits: {
+        fileSize: 1024 * 1024 * 5,  //5MB
+    }
+});
+
+
+///////////დავყავი ლოგიკა და ქვემოთ არის მხოლოს ექსელის ატვირთვები
+const filterExcels = (req, files, cb) => {
+    const allowedFileTypes = [
         'application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet',
         'application/vnd.ms-excel',
         'application/x-dos_ms_excel'];
@@ -30,12 +50,14 @@ const filterFiles = (req, files, cb) => {
     }
 };
 
-const upload = multer({
+const uploadExcel = multer({
     storage: storage,
-    filterFiles: filterFiles,
+    filterFiles: filterExcels,
     limits: {
-        fileSize: 1024 * 1024 * 5,  //5MB
+        fileSize: 1024 * 1024 * 10,  //10MB
     }
 });
 
-export default upload;
+
+
+export  {uploadProfilePicture, uploadExcel};

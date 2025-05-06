@@ -1,5 +1,5 @@
 import express from 'express';
-import upload from "../middleware/uploadFile.js";
+import { uploadProfilePicture } from "../middleware/uploadFile.js";
 const router = express.Router();
 import {
     createUser,
@@ -25,7 +25,7 @@ router.put('/:id', updateUser);
 router.delete('/:id', deleteUser);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
-router.post('/upload-profile-picture/:id', upload.single('profilePicture'), uploadProfilePicture);
+router.post('/upload-profile-picture/:id', uploadProfilePicture.single('profilePicture'), uploadProfilePicture);
 
 
 
