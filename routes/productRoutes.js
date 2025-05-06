@@ -1,5 +1,5 @@
 import express from 'express';
-import {uploadExcel} from "../middleware/uploadFile.js";
+import {uploadExcel, uploadProductImages} from "../middleware/uploadFile.js";
 
 const router = express.Router();
 import {
@@ -10,11 +10,11 @@ import {
     deleteProduct,
     getCategoryStats,
     buyProduct,
-    uploadProductsExcel
+    uploadProductsExcel,
+    updateProductImages
 } from "../controllers/productController.js";
 
 import {auth, isAdmin} from "../middleware/auth.js"; //ეს მიდლვეარი მოგვაქვს და ვიყენებთ ავტორიზაციას ყიდვამდე
-import upload from "../middleware/uploadFile.js";
 
 
 //Product routes
@@ -26,6 +26,10 @@ router.put('/:id', updateProduct);
 router.delete('/:id', auth, isAdmin, deleteProduct);
 router.post('/buyProduct/:id', auth, buyProduct); //ჯერ auth და მერე buy, დაცული როუტი
 router.post('/upload-product-excel', uploadExcel.single('products'), uploadProductsExcel);
+router.post('/update-product-images/:id', uploadProductImages.array('images', 5), updateProductImages);
+
+
+
 export default router;
 
 

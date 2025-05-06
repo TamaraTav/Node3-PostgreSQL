@@ -57,31 +57,6 @@ async  function createProduct(req, res) {
     }
 }
 
-//პროდუქტზე ექსელის ფაილის ატვირთვა
-async function uploadProductsExcel(req, res) {
-    if(!req.file) {
-        return res.status(400).json({error: 'No file uploaded'});
-    }
-    const workbook = xlsx.readFile(req.file.path);
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const sheet = xlsx.utils.sheet_to_json(worksheet);
-                  //ვიღებ ექსელის ვორკ-შიტიდან ინფორმაციას და გარდავქმნი ჯეისონად
-   await prisma.products.createMany({
-       data: sheet.map((row) => ({
-           name: row.name,
-           price: row.price,
-           stock: row.stock,
-           description: row.description,
-           slug: row.slug,
-           categoryId: row.categoryId,
-       })),
-   });
-   fs.unlinkSync(req.file.path); //როცა წაიკითხავს მაგის მერე ვშლი, რომ სერვერი არ გადაივსოს
-
-   res.json({ message: 'Successfully uploaded Products from  Excel' });
-}
-
 // დაედიტება
 async function  updateProduct(req, res) {
     try {
@@ -178,6 +153,39 @@ async function  buyProduct(req, res) {
     }
 }
 
+//პროდუქტზე ექსელის ფაილის ატვირთვა
+async function uploadProductsExcel(req, res) {
+    if(!req.file) {
+        return res.status(400).json({error: 'No file uploaded'});
+    }
+    const workbook = xlsx.readFile(req.file.path);
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const sheet = xlsx.utils.sheet_to_json(worksheet);
+    //ვიღებ ექსელის ვორკ-შიტიდან ინფორმაციას და გარდავქმნი ჯეისონად
+    await prisma.products.createMany({
+        data: sheet.map((row) => ({
+            name: row.name,
+            price: row.price,
+            stock: row.stock,
+            description: row.description,
+            slug: row.slug,
+            categoryId: row.categoryId,
+        })),
+    });
+    fs.unlinkSync(req.file.path); //როცა წაიკითხავს მაგის მერე ვშლი, რომ სერვერი არ გადაივსოს
+
+    res.json({ message: 'Successfully uploaded Products from  Excel' });
+}
+
+
+///პროდუქტზე ფოტოების ატვირთვა
+async function updateProductImages(req, res) {
+    console.log(req.files);
+    res.json({message: 'Images upload  successfully'});
+
+}
+
 
 
 
@@ -189,4 +197,5 @@ export {
     deleteProduct,
     getCategoryStats,
     buyProduct,
-    uploadProductsExcel};
+    uploadProductsExcel,
+    updateProductImages};

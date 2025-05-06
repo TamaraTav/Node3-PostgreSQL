@@ -41,7 +41,7 @@ export const updateUser = async (req, res) => {
 };
 
 //პროფილის სურათის ატვირთვა
-export const uploadProfilePicture = async (req, res) => {
+export const updateProfilePicture = async (req, res) => {
      const { id } = req.params;
      if(!req.file) {
          return res.status(400).json({message:'No file uploaded'});
