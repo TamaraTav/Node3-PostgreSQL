@@ -26,7 +26,6 @@ async function getProducts(req, res) {
     }
 }
 
-
 async function getOneProduct(req, res) {
     try {
         const { id } = req.params;
@@ -58,7 +57,6 @@ async  function createProduct(req, res) {
     }
 }
 
-
 //პროდუქტზე ექსელის ფაილის ატვირთვა
 async function uploadProductsExcel(req, res) {
     if(!req.file) {
@@ -83,8 +81,6 @@ async function uploadProductsExcel(req, res) {
 
    res.json({ message: 'Successfully uploaded Products from  Excel' });
 }
-
-
 
 // დაედიტება
 async function  updateProduct(req, res) {
@@ -121,7 +117,6 @@ async function  deleteProduct(req, res) {
     }
 }
 
-
 async function  getCategoryStats(req, res) {
     try {
         const result = await prisma.products.groupBy({
@@ -137,7 +132,6 @@ async function  getCategoryStats(req, res) {
         res.status(500).json({error: 'Internal server error'});
     }
 }
-
 
 //პროდუქტის ყიდვა იუზერის მიერ
 async function  buyProduct(req, res) {
@@ -183,6 +177,7 @@ async function  buyProduct(req, res) {
         res.status(500).json({error: 'Internal server error'});
     }
 }
+
 
 
 
