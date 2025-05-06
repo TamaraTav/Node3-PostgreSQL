@@ -56,6 +56,14 @@ async  function createProduct(req, res) {
     }
 }
 
+
+//პროდუქტზე ექსელის ფაილის ატვირთვა
+async function uploadProductsExcel(req, res) {
+    res.json({message: 'Excel file uploaded'});
+
+}
+
+
 // დაედიტება
 async function  updateProduct(req, res) {
     try {
@@ -163,4 +171,5 @@ export {
     updateProduct,
     deleteProduct,
     getCategoryStats,
-    buyProduct};
+    buyProduct,
+    uploadProductsExcel};
