@@ -2,6 +2,7 @@
 import {PrismaClient} from '@prisma/client';
 import xlsx from 'xlsx';
 import fs from 'fs';
+import file from "express/lib/view.js";
 
 const prisma = new PrismaClient();
 
@@ -15,6 +16,11 @@ async function getProducts(req, res) {
                category: {
                    select: {
                        name: true,
+                   },
+               },
+               images: {
+                   select: {
+                       url: true,
                    },
                },
            },
@@ -180,10 +186,60 @@ async function uploadProductsExcel(req, res) {
 
 
 ///პროდუქტზე ფოტოების ატვირთვა
+// async function updateProductImages(req, res) {
+//     const {id } = req.params;
+//     const product = await prisma.products.findUnique({
+//         where: {id: parseInt(id)},
+//     });
+//     if (!product) {
+//         if(req.files.length > 0) {
+//             req.files.forEach((file) => {
+//                 if(fs.existsSync( `./${file.path}` )) {  //თუ პროდუქტი ვერ იპოვა, მაშინ წაიშალოს  ეს ფოტოები
+//                     fs.unlinkSync(`./${file.path}` );
+//                 }
+//             });
+//         }
+//         return res.status(404).json({error: 'Product not found'});
+//     }
+//     if (!req.files && req.files.length === 0) {
+//         return res.status(404).json({error: 'No files uploaded'});
+//     }
+//     await prisma.productImage.createMany({
+//         data: req.files.map((file) => {
+//             productId: parseInt(id);
+//             url: file.path
+//         })
+//     });
+//     res.json({ message: 'Successfully uploaded Products images' });
+// }
 async function updateProductImages(req, res) {
-    console.log(req.files);
-    res.json({message: 'Images upload  successfully'});
+    const { id } = req.params;
+    const product = await prisma.products.findUnique({
+        where: { id: parseInt(id) },
+    });
+    if (!product) {
+        if (req.files.length > 0) {
+            req.files.forEach((file) => {
+                if (fs.existsSync(`./${file.path}`)) {
+                    fs.unlinkSync(`./${file.path}`);
+                }
+            });
+        }
+        return res.status(404).json({ error: 'Product not found' });
+    }
 
+    if (!req.files && req.files.length === 0) {
+        return res.status(400).json({ error: 'No files uploaded' });
+    }
+
+    await prisma.productImage.createMany({
+        data: req.files.map((file) => ({
+            productId: parseInt(id),
+            url: file.path,
+        })),
+    });
+
+    res.json({ message: 'Product images uploaded successfully' });
 }
 
 
