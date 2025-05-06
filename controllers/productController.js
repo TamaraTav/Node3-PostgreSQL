@@ -76,7 +76,7 @@ async function uploadProductsExcel(req, res) {
            stock: row.stock,
            description: row.description,
            slug: row.slug,
-           category: row.category,
+           categoryId: row.categoryId,
        })),
    });
    fs.unlinkSync(req.file.path); //როცა წაიკითხავს მაგის მერე ვშლი, რომ სერვერი არ გადაივსოს
