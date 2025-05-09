@@ -73,15 +73,15 @@ export const signup = async (req, res) => {
 };
 
 //იუზერის შესვლა სისტემაში Sign in
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({ where: { email: email }, include: {roles: true } });
     if(!user) {
-        return res.status(401).json(new AppError('Invalid Credentials', 401));
+        return next(new AppError('Invalid Credentials', 401));
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-        return res.status(401).json(new AppError('Invalid Credentials', 401));
+        return next(new AppError('Invalid Credentials', 401));
     }
 
     //ტოკენის შექმნის ლოგიკა
