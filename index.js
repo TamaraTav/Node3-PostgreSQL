@@ -4,7 +4,7 @@ import express from 'express';
 import productRoutes from './routes/productRoutes.js';
 import pool from "./config/db.config.js";
 import userRoutes from "./routes/userRoutes.js";
-import {handleError} from "./utils/errorhandler.js";
+import {AppError, handleError} from "./utils/errorhandler.js";
 import path from "path";
 
 const app = express();
@@ -24,7 +24,12 @@ app.get('/', (req, res) => {
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);    /////იუზერებისთვის
 
-app.use(handleError);  // Error handling middleware
+app.all('*', (req, res, next) => {
+    next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
+// Error handling middleware
+app.use(handleError);
 
 //Error handling middleware
 // app.use((err, req, res, next) => {
