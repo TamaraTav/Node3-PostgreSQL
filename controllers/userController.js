@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import  sendEmail  from '../utils/emailService.js'
-
+import  sendEmail  from '../utils/emailService.js';
+import {AppError} from "../utils/errorhandler.js";
 
 
 const prisma = new PrismaClient();
@@ -77,11 +77,11 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({ where: { email: email }, include: {roles: true } });
     if(!user) {
-        return res.status(401).json({ message: 'No User found.' });
+        return res.status(401).json(new AppError('Invalid Credentials', 401));
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Invalid credentials' });
+        return res.status(401).json(new AppError('Invalid Credentials', 401));
     }
 
     //ტოკენის შექმნის ლოგიკა
