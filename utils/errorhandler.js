@@ -16,10 +16,18 @@ export const handleError = (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
 
-    return res.status(err.statusCode).json({
-        status: err.status,
-        message: err.message,
-        error: err,
-        stack: err.stack,
-    });
+    if(process.env.NODE_ENV === 'development') { //დეველოპერისთის გამოაქვს ესეთი ერორი
+        return res.status(err.statusCode).json({
+            status: err.status,
+            message: err.message,
+            error: err,
+            stack: err.stack,  //ამ სტაკის მეშვეობით ერორში ზუსტად გიწერს კოდის რომელმა ხაზმა გაისროლა შეცდომა
+        });
+    } else if(process.env.NODE_ENV === 'production') { //კლიენტისთვის გამოაქვს მხოლოდ სტატუსი და მესიჯი
+        return res.status(err.statusCode).json({
+            status: err.status,
+            message: err.message,
+        })
+    };
+
 }
