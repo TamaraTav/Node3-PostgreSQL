@@ -5,13 +5,25 @@ import productRoutes from './routes/productRoutes.js';
 import pool from "./config/db.config.js";
 import userRoutes from "./routes/userRoutes.js";
 import {AppError, handleError} from "./utils/errorhandler.js";
-import path from "path";
+import cors from "cors";
+import * as https from "node:https";
 
 const app = express();
 const port = process.env.PORT || 4000;
 
 //Middleware
 app.use(express.json());
+
+
+//დავაყენე cors. ამით სერერზე შემოდის მხოლოდ ის, ვისაც ქვემოთ გავუწერთ და შეძ₾ებს ამ მეთოდების გამოყენებას
+const corsOptions = {
+    origin: process.env.CORS_ORIGINS.split(','),  //env-ში მიწერია ამათი მისამართი, იხილეთ იქ
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    //თუ მინდა ყველაფრიდან გამოიგზავნოს, მაშინ origin: '*',
+}
+app.use(cors(corsOptions));
+
 app.use('/uploads', express.static("./uploads"));  // კლიენტმა რომ შეძლოს მისწვდეს ფოტოს
                                      //http://localhost:4000/uploads/1746324312431-182757769.jpg
 

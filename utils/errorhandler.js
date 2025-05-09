@@ -42,4 +42,12 @@ export const handleError = (err, req, res, next) => {
 export const handleJWTError = () => {
     return new AppError('Invalid token. Please log in again.', 401);
 }
+export const handleJWTExpiredError = () => {
+    return new AppError('Your token has been expired!  Please log in again.', 401);
+}
 
+
+//გლობალური ერორი
+export const globalErrorHandler = (err, req, res, next) => {
+    return new AppError('Something went wrong.  Please contact with me :)');
+}
